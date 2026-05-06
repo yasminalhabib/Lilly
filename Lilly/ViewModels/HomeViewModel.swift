@@ -18,12 +18,17 @@ class HomeViewModel {
     
     var selectedTab: Tab = .home
     
+    var isAccountSheetPresented = false
+    
     func selectTab(_ tab: Tab) {
         selectedTab = tab
-        print("Selected: \(tab)")
     }
     
     func accountTapped() {
-        print("Account tapped")
+        isAccountSheetPresented = true
+    }
+    
+    func closeAccountSheet() {
+        isAccountSheetPresented = false
     }
 }

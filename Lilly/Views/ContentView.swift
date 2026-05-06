@@ -13,9 +13,12 @@ struct ContentView: View {
     
     var body: some View {
         ZStack {
-            Color.black.ignoresSafeArea()
+            Color.black
+                .ignoresSafeArea()
             
             VStack {
+                
+                // TOP RIGHT ACCOUNT BUTTON
                 HStack {
                     Spacer()
                     
@@ -33,6 +36,7 @@ struct ContentView: View {
                 
                 Spacer()
                 
+                // TAB BAR
                 HStack(spacing: 30) {
                     tabButton(icon: "tree.fill", tab: .home)
                     tabButton(icon: "calendar", tab: .calendar)
@@ -57,8 +61,18 @@ struct ContentView: View {
                 .padding(.bottom, 32)
             }
         }
+        
+        // SHEET
+        .sheet(isPresented: $viewModel.isAccountSheetPresented) {
+            AccountSheetView {
+                viewModel.closeAccountSheet()
+            }
+            .presentationDetents([.fraction(0.85)])
+            .presentationDragIndicator(.visible)
+        }
     }
     
+    // TAB BUTTON
     func tabButton(icon: String, tab: HomeViewModel.Tab) -> some View {
         Button {
             viewModel.selectTab(tab)
@@ -69,10 +83,71 @@ struct ContentView: View {
                 .frame(width: 54, height: 40)
                 .background {
                     Capsule()
-                        .fill(viewModel.selectedTab == tab ? .white.opacity(0.22) : .clear)
+                        .fill(
+                            viewModel.selectedTab == tab
+                            ? .white.opacity(0.22)
+                            : .clear
+                        )
                 }
         }
         .buttonStyle(.plain)
+    }
+}
+
+struct AccountSheetView: View {
+    
+    var onClose: () -> Void
+    
+    var body: some View {
+        VStack(spacing: 24) {
+            
+            Capsule()
+                .fill(.gray.opacity(0.4))
+                .frame(width: 45, height: 5)
+                .padding(.top, 10)
+            
+            Spacer()
+            
+            Image(systemName: "person.circle.fill")
+                .font(.system(size: 90))
+                .foregroundStyle(.green)
+            
+            Text("Lilly")
+                .font(.largeTitle.bold())
+            
+            VStack(spacing: 16) {
+                
+                RoundedRectangle(cornerRadius: 22)
+                    .fill(.gray.opacity(0.12))
+                    .frame(height: 120)
+                    .overlay {
+                        Text("Badge Collection")
+                    }
+                
+                RoundedRectangle(cornerRadius: 22)
+                    .fill(.gray.opacity(0.12))
+                    .frame(height: 70)
+                    .overlay {
+                        Text("Notifications")
+                    }
+                
+                RoundedRectangle(cornerRadius: 22)
+                    .fill(.gray.opacity(0.12))
+                    .frame(height: 70)
+                    .overlay {
+                        Text("Cycle Settings")
+                    }
+            }
+            .padding(.horizontal)
+            
+            Spacer()
+            
+            Button("Close") {
+                onClose()
+            }
+            .buttonStyle(.borderedProminent)
+            .padding(.bottom, 20)
+        }
     }
 }
 
