@@ -10,25 +10,25 @@ import Foundation
 @Observable
 class HomeViewModel {
     
-    enum Tab {
-        case home
-        case calendar
-        case rewards
-    }
+    var selectedTab: HomeTab = .home
+    var isProfileSheetPresented = false
     
-    var selectedTab: Tab = .home
+    let badges: [ProfileBadge] = [
+        ProfileBadge(title: "Sleep Pro", icon: "moon.zzz.fill"),
+        ProfileBadge(title: "Calm Master", icon: "sparkles"),
+        ProfileBadge(title: "Energy Rush", icon: "bolt.fill"),
+        ProfileBadge(title: "Hydration Hero", icon: "drop.fill")
+    ]
     
-    var isAccountSheetPresented = false
-    
-    func selectTab(_ tab: Tab) {
+    func selectTab(_ tab: HomeTab) {
         selectedTab = tab
     }
     
-    func accountTapped() {
-        isAccountSheetPresented = true
+    func profileTapped() {
+        isProfileSheetPresented = true
     }
     
-    func closeAccountSheet() {
-        isAccountSheetPresented = false
+    func closeProfileSheet() {
+        isProfileSheetPresented = false
     }
 }
