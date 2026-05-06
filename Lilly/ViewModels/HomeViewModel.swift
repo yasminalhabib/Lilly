@@ -13,6 +13,24 @@ class HomeViewModel {
     var selectedTab: HomeTab = .home
     var isProfileSheetPresented = false
     
+    let tips: [HomeTip] = [
+        HomeTip(
+            title: "HYDRATION 💧",
+            subtitle: "Drink more water",
+            description: "Maintains blood volume and keeps nutrients circulating."
+        ),
+        HomeTip(
+            title: "MOVEMENT 🏃‍♀️",
+            subtitle: "Exercise daily",
+            description: "30 minutes boosts circulation and heart efficiency."
+        ),
+        HomeTip(
+            title: "NUTRITION 🍎",
+            subtitle: "Eat balanced meals",
+            description: "Supports energy, mood, and daily wellness."
+        )
+    ]
+    
     let badges: [ProfileBadge] = [
         ProfileBadge(title: "Sleep Pro", icon: "moon.zzz.fill"),
         ProfileBadge(title: "Calm Master", icon: "sparkles"),

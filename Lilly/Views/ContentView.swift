@@ -34,6 +34,23 @@ struct ContentView: View {
                 
                 Spacer()
                 
+                VStack(alignment: .leading, spacing: 14) {
+                    Text("Today’s Tips")
+                        .font(.title2.bold())
+                        .foregroundStyle(.white)
+                        .padding(.horizontal, 24)
+                    
+                    ScrollView(.horizontal, showsIndicators: false) {
+                        HStack(spacing: 16) {
+                            ForEach(viewModel.tips) { tip in
+                                HomeTipCard(tip: tip)
+                            }
+                        }
+                        .padding(.horizontal, 24)
+                    }
+                }
+                .padding(.bottom, 28)
+                
                 HomeTabBarView(viewModel: viewModel)
                     .padding(.bottom, 32)
             }
