@@ -23,7 +23,13 @@ struct ContentView: View {
             
             // CALENDAR
             ZStack {
-                Color.black
+                
+                Image("background")
+                    .resizable()
+                    .scaledToFill()
+                    .ignoresSafeArea()
+                
+                Color.black.opacity(0.35)
                     .ignoresSafeArea()
                 
                 Text("Calendar")
@@ -37,7 +43,13 @@ struct ContentView: View {
             
             // BADGES
             ZStack {
-                Color.black
+                
+                Image("background")
+                    .resizable()
+                    .scaledToFill()
+                    .ignoresSafeArea()
+                
+                Color.black.opacity(0.35)
                     .ignoresSafeArea()
                 
                 Text("Badges")
@@ -53,7 +65,13 @@ struct ContentView: View {
     
     private var homeContent: some View {
         ZStack {
-            Color.black
+            
+            Image("background")
+                .resizable()
+                .scaledToFill()
+                .ignoresSafeArea()
+            
+            Color.black.opacity(0.35)
                 .ignoresSafeArea()
             
             VStack {
@@ -73,7 +91,7 @@ struct ContentView: View {
                 .padding(.horizontal, 24)
                 .padding(.top, 55)
                 
-                Spacer()
+                Spacer(minLength: 160)
                 
                 VStack(alignment: .leading, spacing: 14) {
                     
@@ -92,7 +110,7 @@ struct ContentView: View {
                         .padding(.horizontal, 24)
                     }
                 }
-                .padding(.bottom, 28)
+                .padding(.bottom, 98)
             }
         }
         .sheet(isPresented: $viewModel.isProfileSheetPresented) {
