@@ -89,7 +89,7 @@ struct ContentView: View {
                     .buttonStyle(.plain)
                 }
                 .padding(.horizontal, 24)
-                .padding(.top, 55)
+                .padding(.top, 85)
                 
                 Spacer(minLength: 160)
                 
