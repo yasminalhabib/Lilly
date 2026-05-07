@@ -18,7 +18,7 @@ struct ContentView: View {
             homeContent
                 .tabItem {
                     Image(systemName: "tree.fill")
-                    Text("Home")
+                    Text("Main")
                 }
             
             // CALENDAR
