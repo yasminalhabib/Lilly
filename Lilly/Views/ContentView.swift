@@ -4,7 +4,6 @@
 //
 //  Created by Yasmin Alhabib on 03/05/2026.
 //
-
 import SwiftUI
 
 struct ContentView: View {
@@ -12,11 +11,53 @@ struct ContentView: View {
     @State private var viewModel = HomeViewModel()
     
     var body: some View {
+        
+        TabView {
+            
+            // HOME
+            homeContent
+                .tabItem {
+                    Image(systemName: "tree.fill")
+                    Text("Home")
+                }
+            
+            // CALENDAR
+            ZStack {
+                Color.black
+                    .ignoresSafeArea()
+                
+                Text("Calendar")
+                    .foregroundStyle(.white)
+                    .font(.largeTitle.bold())
+            }
+            .tabItem {
+                Image(systemName: "calendar")
+                Text("Calendar")
+            }
+            
+            // BADGES
+            ZStack {
+                Color.black
+                    .ignoresSafeArea()
+                
+                Text("Badges")
+                    .foregroundStyle(.white)
+                    .font(.largeTitle.bold())
+            }
+            .tabItem {
+                Image(systemName: "rosette")
+                Text("Badges")
+            }
+        }
+    }
+    
+    private var homeContent: some View {
         ZStack {
             Color.black
                 .ignoresSafeArea()
             
             VStack {
+                
                 HStack {
                     Spacer()
                     
@@ -35,12 +76,14 @@ struct ContentView: View {
                 Spacer()
                 
                 VStack(alignment: .leading, spacing: 14) {
+                    
                     Text("Today’s Tips")
                         .font(.title2.bold())
                         .foregroundStyle(.white)
                         .padding(.horizontal, 24)
                     
                     ScrollView(.horizontal, showsIndicators: false) {
+                        
                         HStack(spacing: 16) {
                             ForEach(viewModel.tips) { tip in
                                 HomeTipCard(tip: tip)
@@ -50,9 +93,6 @@ struct ContentView: View {
                     }
                 }
                 .padding(.bottom, 28)
-                
-                HomeTabBarView(viewModel: viewModel)
-                    .padding(.bottom, 32)
             }
         }
         .sheet(isPresented: $viewModel.isProfileSheetPresented) {
