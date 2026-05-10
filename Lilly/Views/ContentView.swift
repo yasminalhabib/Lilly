@@ -10,6 +10,9 @@ struct ContentView: View {
     
     @State private var viewModel = HomeViewModel()
     
+    // حركة الشخصية
+    @State private var float = false
+    
     var body: some View {
         
         TabView {
@@ -24,12 +27,7 @@ struct ContentView: View {
             // CALENDAR
             ZStack {
                 
-                Image("background")
-                    .resizable()
-                    .scaledToFill()
-                    .ignoresSafeArea()
-                
-                Color.black.opacity(0.35)
+                Color.black
                     .ignoresSafeArea()
                 
                 Text("Calendar")
@@ -44,12 +42,7 @@ struct ContentView: View {
             // BADGES
             ZStack {
                 
-                Image("background")
-                    .resizable()
-                    .scaledToFill()
-                    .ignoresSafeArea()
-                
-                Color.black.opacity(0.35)
+                Color.black
                     .ignoresSafeArea()
                 
                 Text("Badges")
@@ -61,21 +54,21 @@ struct ContentView: View {
                 Text("Badges")
             }
         }
+        .tint(.white)
     }
     
     private var homeContent: some View {
         ZStack {
             
+            // الخلفية
             Image("background")
                 .resizable()
                 .scaledToFill()
                 .ignoresSafeArea()
             
-            Color.black.opacity(0.35)
-                .ignoresSafeArea()
-            
             VStack {
                 
+                // زر البروفايل
                 HStack {
                     Spacer()
                     
@@ -91,8 +84,28 @@ struct ContentView: View {
                 .padding(.horizontal, 24)
                 .padding(.top, 85)
                 
-                Spacer(minLength: 160)
+                Spacer()
                 
+                // الشخصية
+                Image("doll")
+                    .resizable()
+                    .scaledToFit()
+                    .frame(width: 430, height: 430)
+                    
+                    // حركة الطيران
+                    .offset(y: float ? -50 : -30)
+                    
+                    // انيميشن
+                    .animation(
+                        .easeInOut(duration: 4)
+                            .repeatForever(autoreverses: true),
+                        value: float
+                    )
+                    
+                    // حتى ما تدف الكروت
+                    .padding(.bottom, -60)
+                
+                // قسم النصائح
                 VStack(alignment: .leading, spacing: 14) {
                     
                     Text("Today’s Tips")
@@ -103,6 +116,7 @@ struct ContentView: View {
                     ScrollView(.horizontal, showsIndicators: false) {
                         
                         HStack(spacing: 16) {
+                            
                             ForEach(viewModel.tips) { tip in
                                 HomeTipCard(tip: tip)
                             }
@@ -113,7 +127,15 @@ struct ContentView: View {
                 .padding(.bottom, 98)
             }
         }
+        
+        // تشغيل الانيميشن
+        .onAppear {
+            float.toggle()
+        }
+        
+        // شيت البروفايل
         .sheet(isPresented: $viewModel.isProfileSheetPresented) {
+            
             ProfileSheetView(
                 badges: viewModel.badges,
                 onClose: {

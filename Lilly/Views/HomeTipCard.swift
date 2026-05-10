@@ -29,13 +29,43 @@ struct HomeTipCard: View {
         }
         .padding(20)
         .frame(width: 190, height: 170)
+        
         .background(
-            RoundedRectangle(cornerRadius: 30)
-                .fill(.ultraThinMaterial)
+            ZStack {
+                
+                // القزاز
+                RoundedRectangle(cornerRadius: 32)
+                    .fill(.ultraThinMaterial)
+                    .opacity(0.75)
+                
+                // لمعة خفيفة
+                RoundedRectangle(cornerRadius: 32)
+                    .fill(
+                        LinearGradient(
+                            colors: [
+                                .white.opacity(0.20),
+                                .clear
+                            ],
+                            startPoint: .topLeading,
+                            endPoint: .bottomTrailing
+                        )
+                    )
+            }
         )
+        
         .overlay(
-            RoundedRectangle(cornerRadius: 30)
-                .stroke(Color.white.opacity(0.2), lineWidth: 1)
+            RoundedRectangle(cornerRadius: 32)
+                .stroke(
+                    .white.opacity(0.25),
+                    lineWidth: 1
+                )
+        )
+        
+        .shadow(
+            color: .black.opacity(0.12),
+            radius: 15,
+            x: 0,
+            y: 10
         )
     }
 }
