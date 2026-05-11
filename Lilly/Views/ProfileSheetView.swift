@@ -28,6 +28,7 @@ struct ProfileSheetView: View {
                 onClose()
             }
             .buttonStyle(.borderedProminent)
+            .tint(.green)
             .padding(.bottom, 20)
         }
         .padding(.top, 30)
@@ -36,9 +37,17 @@ struct ProfileSheetView: View {
     
     private var header: some View {
         VStack(spacing: 12) {
-            Image(systemName: "person.circle.fill")
-                .font(.system(size: 70))
-                .foregroundStyle(.green)
+            
+            Image("head")
+                .resizable()
+                .scaledToFill()
+                .frame(width: 95, height: 95)
+                .clipShape(Circle())
+                .overlay(
+                    Circle()
+                        .stroke(.white.opacity(0.3), lineWidth: 2)
+                )
+                .shadow(color: .black.opacity(0.2), radius: 10)
             
             Text("Lilly")
                 .font(.largeTitle.bold())
@@ -47,17 +56,21 @@ struct ProfileSheetView: View {
                 print("Edit tapped")
             }
             .font(.subheadline)
+            .foregroundStyle(.green)
         }
     }
     
     private var badgeCollection: some View {
         VStack(alignment: .leading, spacing: 18) {
+            
             Text("🏅 Lilly's badge collection")
                 .font(.headline)
             
             HStack(spacing: 18) {
                 ForEach(badges) { badge in
+                    
                     VStack(spacing: 8) {
+                        
                         Image(systemName: badge.icon)
                             .font(.system(size: 22))
                             .frame(width: 44, height: 44)
@@ -79,12 +92,19 @@ struct ProfileSheetView: View {
     
     private var settingsRows: some View {
         VStack(spacing: 16) {
+            
             HStack {
+                
                 Image(systemName: "bell.fill")
+                    .foregroundStyle(.green)
+                
                 Text("Notifications")
+                
                 Spacer()
+                
                 Toggle("", isOn: $notificationsEnabled)
                     .labelsHidden()
+                    .tint(.green) // 👈 لون التوقل الأخضر مثل أبل
             }
             .padding()
             .background(.gray.opacity(0.12))
@@ -93,11 +113,18 @@ struct ProfileSheetView: View {
             Button {
                 print("Cycle Settings tapped")
             } label: {
+                
                 HStack {
+                    
                     Image(systemName: "arrow.triangle.2.circlepath")
+                        .foregroundStyle(.green)
+                    
                     Text("Cycle Settings")
+                    
                     Spacer()
+                    
                     Image(systemName: "chevron.right")
+                        .foregroundStyle(.secondary)
                 }
                 .foregroundStyle(.primary)
                 .padding()
