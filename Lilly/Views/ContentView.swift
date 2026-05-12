@@ -3,28 +3,24 @@
 //  Lilly
 //
 //  Created by Yasmin Alhabib on 03/05/2026.
-//
 import SwiftUI
 
 struct ContentView: View {
     
     @State private var viewModel = HomeViewModel()
     
-    // حركة الشخصية
     @State private var float = false
     
     var body: some View {
         
         TabView {
             
-            // HOME
             homeContent
                 .tabItem {
                     Image(systemName: "tree.fill")
                     Text("Main")
                 }
             
-            // CALENDAR
             ZStack {
                 
                 Color.black
@@ -39,7 +35,6 @@ struct ContentView: View {
                 Text("Calendar")
             }
             
-            // BADGES
             ZStack {
                 
                 Color.black
@@ -60,7 +55,6 @@ struct ContentView: View {
     private var homeContent: some View {
         ZStack {
             
-            // الخلفية
             Image("background")
                 .resizable()
                 .scaledToFill()
@@ -68,16 +62,16 @@ struct ContentView: View {
             
             VStack {
                 
-                // زر البروفايل
                 HStack {
                     Spacer()
                     
                     Button {
                         viewModel.profileTapped()
                     } label: {
-                        Image(systemName: "person.circle")
-                            .font(.system(size: 42))
-                            .foregroundStyle(.white)
+                        Image("pro")
+                            .resizable()
+                            .scaledToFit()
+                            .frame(width: 42, height: 42)
                     }
                     .buttonStyle(.plain)
                 }
@@ -86,26 +80,18 @@ struct ContentView: View {
                 
                 Spacer()
                 
-                // الشخصية
                 Image("doll")
                     .resizable()
                     .scaledToFit()
                     .frame(width: 430, height: 430)
-                    
-                    // حركة الطيران
                     .offset(y: float ? -50 : -30)
-                    
-                    // انيميشن
                     .animation(
                         .easeInOut(duration: 4)
                             .repeatForever(autoreverses: true),
                         value: float
                     )
-                    
-                    // حتى ما تدف الكروت
                     .padding(.bottom, -60)
                 
-                // قسم النصائح
                 VStack(alignment: .leading, spacing: 14) {
                     
                     Text("Today’s Tips")
@@ -127,13 +113,9 @@ struct ContentView: View {
                 .padding(.bottom, 98)
             }
         }
-        
-        // تشغيل الانيميشن
         .onAppear {
             float.toggle()
         }
-        
-        // شيت البروفايل
         .sheet(isPresented: $viewModel.isProfileSheetPresented) {
             
             ProfileSheetView(
