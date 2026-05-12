@@ -11,7 +11,10 @@ struct ProfileSheetView: View {
     let badges: [ProfileBadge]
     let onClose: () -> Void
     
+    @AppStorage("notificationsEnabled") private var savedNotificationsEnabled = true
+    
     @State private var notificationsEnabled = true
+    @State private var isEditing = false
     
     var body: some View {
         VStack(spacing: 24) {
@@ -24,8 +27,14 @@ struct ProfileSheetView: View {
             
             Spacer()
             
-            Button("Close") {
-                onClose()
+            Button(isEditing ? "Save" : "Close") {
+                if isEditing {
+                    savedNotificationsEnabled = notificationsEnabled
+                    isEditing = false
+                    onClose()
+                } else {
+                    onClose()
+                }
             }
             .buttonStyle(.borderedProminent)
             .tint(.green)
@@ -33,6 +42,9 @@ struct ProfileSheetView: View {
         }
         .padding(.top, 30)
         .padding(.horizontal, 24)
+        .onAppear {
+            notificationsEnabled = savedNotificationsEnabled
+        }
     }
     
     private var header: some View {
@@ -52,11 +64,12 @@ struct ProfileSheetView: View {
             Text("Lilly")
                 .font(.largeTitle.bold())
             
-            Button("Edit") {
-                print("Edit tapped")
+            Button(isEditing ? "Editing..." : "Edit") {
+                isEditing = true
             }
             .font(.subheadline)
             .foregroundStyle(.green)
+            .disabled(isEditing)
         }
     }
     
@@ -96,7 +109,7 @@ struct ProfileSheetView: View {
             HStack {
                 
                 Image(systemName: "bell.fill")
-                    .foregroundStyle(.green)
+                    .foregroundStyle(.black)
                 
                 Text("Notifications")
                 
@@ -104,20 +117,23 @@ struct ProfileSheetView: View {
                 
                 Toggle("", isOn: $notificationsEnabled)
                     .labelsHidden()
-                    .tint(.green) // 👈 لون التوقل الأخضر مثل أبل
+                    .tint(.green)
+                    .disabled(!isEditing)
             }
             .padding()
             .background(.gray.opacity(0.12))
             .clipShape(RoundedRectangle(cornerRadius: 18))
             
             Button {
-                print("Cycle Settings tapped")
+                if isEditing {
+                    print("Cycle Settings tapped")
+                }
             } label: {
                 
                 HStack {
                     
                     Image(systemName: "arrow.triangle.2.circlepath")
-                        .foregroundStyle(.green)
+                        .foregroundStyle(.black)
                     
                     Text("Cycle Settings")
                     
@@ -131,6 +147,8 @@ struct ProfileSheetView: View {
                 .background(.gray.opacity(0.12))
                 .clipShape(RoundedRectangle(cornerRadius: 18))
             }
+            .disabled(!isEditing)
+            .opacity(isEditing ? 1 : 0.6)
         }
     }
 }
