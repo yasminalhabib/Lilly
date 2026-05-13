@@ -13,7 +13,7 @@ struct MainTabView: View {
         
         TabView {
             
-            ContentView()
+            MainPageView()
                 .tabItem {
                     Label("Home", systemImage: "house.fill")
                 }

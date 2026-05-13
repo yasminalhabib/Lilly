@@ -5,7 +5,7 @@
 //  Created by Yasmin Alhabib on 03/05/2026.
 import SwiftUI
 
-struct ContentView: View {
+struct MainPageView: View {
     
     @State private var viewModel = HomeViewModel()
     
@@ -131,5 +131,5 @@ struct ContentView: View {
 }
 
 #Preview {
-    ContentView()
+    MainPageView()
 }
