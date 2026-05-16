@@ -102,9 +102,7 @@ class HealthKitManager {
     }
     
     private func readHeight() {
-        guard let heightType = HKQuantityType.quantityType(forIdentifier: .height) else {
-            return
-        }
+        guard let heightType = HKQuantityType.quantityType(forIdentifier: .height) else { return }
         
         let sortDescriptor = NSSortDescriptor(
             key: HKSampleSortIdentifierEndDate,
@@ -118,9 +116,7 @@ class HealthKitManager {
             sortDescriptors: [sortDescriptor]
         ) { _, samples, _ in
             
-            guard let sample = samples?.first as? HKQuantitySample else {
-                return
-            }
+            guard let sample = samples?.first as? HKQuantitySample else { return }
             
             let heightInCm = sample.quantity.doubleValue(for: .meterUnit(with: .centi))
             
@@ -133,9 +129,7 @@ class HealthKitManager {
     }
     
     private func readWeight() {
-        guard let weightType = HKQuantityType.quantityType(forIdentifier: .bodyMass) else {
-            return
-        }
+        guard let weightType = HKQuantityType.quantityType(forIdentifier: .bodyMass) else { return }
         
         let sortDescriptor = NSSortDescriptor(
             key: HKSampleSortIdentifierEndDate,
@@ -149,9 +143,7 @@ class HealthKitManager {
             sortDescriptors: [sortDescriptor]
         ) { _, samples, _ in
             
-            guard let sample = samples?.first as? HKQuantitySample else {
-                return
-            }
+            guard let sample = samples?.first as? HKQuantitySample else { return }
             
             let weightInKg = sample.quantity.doubleValue(for: .gramUnit(with: .kilo))
             
@@ -192,30 +184,33 @@ class HealthKitManager {
             if let error = error {
                 DispatchQueue.main.async {
                     self.errorMessage = error.localizedDescription
+                    print("❌ Health Error:", error.localizedDescription)
                 }
                 return
             }
             
             guard let samples = samples as? [HKCategorySample] else {
+                DispatchQueue.main.async {
+                    print("❌ No menstrual samples")
+                }
                 return
             }
             
-            let flowSamples = samples.filter { sample in
-                sample.value == HKCategoryValueSeverity.unspecified.rawValue ||
-                sample.value == HKCategoryValueSeverity.mild.rawValue ||
-                sample.value == HKCategoryValueSeverity.moderate.rawValue ||
-                sample.value == HKCategoryValueSeverity.severe.rawValue
-            }
-            
-            let days = Set(flowSamples.map {
+            let days = Set(samples.map {
                 calendar.startOfDay(for: $0.startDate)
             }).sorted(by: >)
             
             let periods = self.groupConsecutivePeriodDays(days)
             
             DispatchQueue.main.async {
-                self.lastPeriodStartDate = periods.first?.last
+                print("🩸 Health period samples count:", samples.count)
+                print("🩸 Period days:", days)
+                print("🩸 Periods:", periods)
+                
+                self.lastPeriodStartDate = periods.first?.min()
                 self.lastPeriodLengthDays = periods.first?.count
+                
+                print("✅ Last period start date:", String(describing: self.lastPeriodStartDate))
                 
                 if !periods.isEmpty {
                     let totalDays = periods.map { $0.count }.reduce(0, +)

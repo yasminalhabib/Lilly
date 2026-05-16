@@ -8,6 +8,7 @@ import SwiftUI
 struct MainPageView: View {
     
     @State private var viewModel = HomeViewModel()
+    @State private var healthManager = HealthKitManager()
     
     @State private var float = false
     
@@ -22,9 +23,7 @@ struct MainPageView: View {
                 }
             
             ZStack {
-                
-                Color.black
-                    .ignoresSafeArea()
+                Color.black.ignoresSafeArea()
                 
                 Text("Calendar")
                     .foregroundStyle(.white)
@@ -36,9 +35,7 @@ struct MainPageView: View {
             }
             
             ZStack {
-                
-                Color.black
-                    .ignoresSafeArea()
+                Color.black.ignoresSafeArea()
                 
                 Text("Badges")
                     .foregroundStyle(.white)
@@ -50,12 +47,15 @@ struct MainPageView: View {
             }
         }
         .tint(.white)
+        .onAppear {
+            healthManager.requestAuthorization()
+        }
     }
     
     private var homeContent: some View {
         ZStack {
             
-            Image("background")
+            Image(currentBackgroundName)
                 .resizable()
                 .scaledToFill()
                 .ignoresSafeArea()
@@ -100,9 +100,7 @@ struct MainPageView: View {
                         .padding(.horizontal, 24)
                     
                     ScrollView(.horizontal, showsIndicators: false) {
-                        
                         HStack(spacing: 16) {
-                            
                             ForEach(viewModel.tips) { tip in
                                 HomeTipCard(tip: tip)
                             }
@@ -117,7 +115,6 @@ struct MainPageView: View {
             float.toggle()
         }
         .sheet(isPresented: $viewModel.isProfileSheetPresented) {
-            
             ProfileSheetView(
                 badges: viewModel.badges,
                 onClose: {
@@ -126,6 +123,36 @@ struct MainPageView: View {
             )
             .presentationDetents([.fraction(0.85)])
             .presentationDragIndicator(.visible)
+        }
+    }
+    
+    private var currentBackgroundName: String {
+        guard let startDate = healthManager.lastPeriodStartDate else {
+            print("❌ No period start date from Health")
+            return "background"
+        }
+        
+        let days = Calendar.current.dateComponents(
+            [.day],
+            from: Calendar.current.startOfDay(for: startDate),
+            to: Calendar.current.startOfDay(for: Date())
+        ).day ?? 0
+        
+        let cycleDay = days % 28
+        
+        print("✅ Period Start:", startDate)
+        print("✅ Days since period:", days)
+        print("✅ Cycle Day:", cycleDay)
+        
+        switch cycleDay {
+        case 0...6:
+            return "background s"
+        case 7...13:
+            return "background f"
+        case 14...20:
+            return "background w"
+        default:
+            return "background"
         }
     }
 }
