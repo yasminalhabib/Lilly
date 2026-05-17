@@ -4,7 +4,6 @@
 //
 //  Created by Yasmin Alhabib on 03/05/2026.
 import SwiftUI
-
 struct MainPageView: View {
     
     @State private var viewModel = HomeViewModel()
@@ -84,13 +83,13 @@ struct MainPageView: View {
                     .resizable()
                     .scaledToFit()
                     .frame(width: 430, height: 430)
-                    .offset(y: float ? -50 : -30)
+                    .offset(y: float ? -60 : -40)
                     .animation(
                         .easeInOut(duration: 4)
                             .repeatForever(autoreverses: true),
                         value: float
                     )
-                    .padding(.bottom, -60)
+                    .padding(.bottom, -35)
                 
                 VStack(alignment: .leading, spacing: 14) {
                     
@@ -108,11 +107,11 @@ struct MainPageView: View {
                         .padding(.horizontal, 24)
                     }
                 }
-                .padding(.bottom, 98)
+                .padding(.bottom, 130)
             }
         }
         .onAppear {
-            float.toggle()
+            float = true
         }
         .sheet(isPresented: $viewModel.isProfileSheetPresented) {
             ProfileSheetView(
