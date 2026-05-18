@@ -10,18 +10,14 @@ import SwiftUI
 struct MoodPopupView: View {
     @ObservedObject var moodVM: MoodViewModel
     @ObservedObject var checkInVM: CheckInViewModel
+    var onAllDone: () -> Void
+
     @State private var showCheckIn = false
 
     let moods = ["Happy", "Sad", "Angry", "Tired", "Sleepy", "Fine"]
 
     var body: some View {
         ZStack {
-            // Background
-            Image("background")
-                .resizable()
-                .scaledToFill()
-                .ignoresSafeArea()
-
             // MARK: - Mood Popup
             if !showCheckIn {
                 VStack(spacing: 24) {
@@ -81,7 +77,7 @@ struct MoodPopupView: View {
             if showCheckIn {
                 CheckInPopupView(checkInVM: checkInVM) {
                     withAnimation(.easeInOut(duration: 0.3)) {
-                        showCheckIn = false
+                        onAllDone()
                     }
                 }
                 .transition(.opacity.combined(with: .scale(scale: 0.95)))
@@ -127,5 +123,19 @@ struct MoodCell: View {
             .padding(6)
         }
         .buttonStyle(.plain)
+    }
+}
+
+#Preview {
+    ZStack {
+        Image("background")
+            .resizable()
+            .scaledToFill()
+            .ignoresSafeArea()
+        MoodPopupView(
+            moodVM: MoodViewModel(),
+            checkInVM: CheckInViewModel(),
+            onAllDone: {}
+        )
     }
 }

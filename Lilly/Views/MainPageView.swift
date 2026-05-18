@@ -10,42 +10,67 @@ struct MainPageView: View {
     @State private var viewModel = HomeViewModel()
     @State private var healthManager = HealthKitManager()
     @StateObject private var moodVM = MoodViewModel()
+    @StateObject private var checkInVM = CheckInViewModel()
     
     @State private var float = false
+    @State private var showMoodPopup = true
     
     var body: some View {
         
-        TabView {
-            
-            homeContent
-                .tabItem {
-                    Image(systemName: "tree.fill")
-                    Text("Main")
+        ZStack {
+            TabView {
+                
+                homeContent
+                    .tabItem {
+                        Image(systemName: "tree.fill")
+                        Text("Main")
+                    }
+                
+                CalendarView(moodVM: moodVM)
+                    .tabItem {
+                        Image(systemName: "calendar")
+                        Text("Calendar")
+                    }
+                
+                ZStack {
+                    Color.black.ignoresSafeArea()
+                    Text("Badges")
+                        .foregroundStyle(.white)
+                        .font(.largeTitle.bold())
                 }
-            
-            CalendarView(moodVM: moodVM)  // ← connected here
                 .tabItem {
-                    Image(systemName: "calendar")
-                    Text("Calendar")
+                    Image(systemName: "rosette")
+                    Text("Badges")
                 }
-            
-            ZStack {
-                Color.black.ignoresSafeArea()
-                Text("Badges")
-                    .foregroundStyle(.white)
-                    .font(.largeTitle.bold())
             }
-            .tabItem {
-                Image(systemName: "rosette")
-                Text("Badges")
+            .tint(.white)
+            .onAppear {
+                healthManager.requestAuthorization()
+                float = true
+            }
+            
+            // MARK: - Mood Popup Overlay
+            if showMoodPopup {
+                Color.black.opacity(0.3)
+                    .ignoresSafeArea()
+                    .transition(.opacity)
+                
+                MoodPopupView(
+                    moodVM: moodVM,
+                    checkInVM: checkInVM,
+                    onAllDone: {
+                        withAnimation(.easeInOut(duration: 0.3)) {
+                            showMoodPopup = false
+                        }
+                    }
+                )
+                .transition(.opacity.combined(with: .scale(scale: 0.95)))
             }
         }
-        .tint(.white)
-        .onAppear {
-            healthManager.requestAuthorization()
-        }
+        .animation(.easeInOut(duration: 0.3), value: showMoodPopup)
     }
     
+    // MARK: - Home Content
     private var homeContent: some View {
         ZStack {
             
@@ -88,7 +113,7 @@ struct MainPageView: View {
                 
                 VStack(alignment: .leading, spacing: 14) {
                     
-                    Text("Today’s Tips")
+                    Text("Today's Tips")
                         .font(.title2.bold())
                         .foregroundStyle(.white)
                         .padding(.horizontal, 24)
@@ -105,9 +130,6 @@ struct MainPageView: View {
                 .padding(.bottom, 130)
             }
         }
-        .onAppear {
-            float = true
-        }
         .sheet(isPresented: $viewModel.isProfileSheetPresented) {
             ProfileSheetView(
                 badges: viewModel.badges,
@@ -120,6 +142,7 @@ struct MainPageView: View {
         }
     }
     
+    // MARK: - Background Logic
     private var currentBackgroundName: String {
         guard let startDate = healthManager.lastPeriodStartDate else {
             print("❌ No period start date from Health")
