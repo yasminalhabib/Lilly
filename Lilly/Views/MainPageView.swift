@@ -4,10 +4,12 @@
 //
 //  Created by Yasmin Alhabib on 03/05/2026.
 import SwiftUI
+
 struct MainPageView: View {
     
     @State private var viewModel = HomeViewModel()
     @State private var healthManager = HealthKitManager()
+    @StateObject private var moodVM = MoodViewModel()
     
     @State private var float = false
     
@@ -21,21 +23,14 @@ struct MainPageView: View {
                     Text("Main")
                 }
             
-            ZStack {
-                Color.black.ignoresSafeArea()
-                
-                Text("Calendar")
-                    .foregroundStyle(.white)
-                    .font(.largeTitle.bold())
-            }
-            .tabItem {
-                Image(systemName: "calendar")
-                Text("Calendar")
-            }
+            CalendarView(moodVM: moodVM)  // ← connected here
+                .tabItem {
+                    Image(systemName: "calendar")
+                    Text("Calendar")
+                }
             
             ZStack {
                 Color.black.ignoresSafeArea()
-                
                 Text("Badges")
                     .foregroundStyle(.white)
                     .font(.largeTitle.bold())
